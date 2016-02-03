@@ -1,28 +1,26 @@
 package com.hsw.NettyShiyan;
 
+
 import io.netty.buffer.ByteBuf;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelHandlerAdapter;
 
 /**
- * 处理事件
+ * Handles a server-side channel.
  */
-public class DiscardServerHandler extends ChannelHandlerAdapter
-{
+public class DiscardServerHandler extends ChannelHandlerAdapter { // (1)
 
-	// 读取管道信息
-	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg)
-	{
-		((ByteBuf) msg).release();
-	}
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
+        // Discard the received data silently.
+        ((ByteBuf) msg).release(); // (3)
+    }
 
-	// 异常发生时调用
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-	{
-		cause.printStackTrace();
-		ctx.close();
-	}
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
+        // Close the connection when an exception is raised.
+        cause.printStackTrace();
+        ctx.close();
+    }
 }

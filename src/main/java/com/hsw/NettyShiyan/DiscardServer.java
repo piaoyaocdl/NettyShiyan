@@ -10,26 +10,28 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class App
+/**
+ * Discards any incoming data.
+ */
+public class DiscardServer
 {
 
 	private int port;
 
-	public App(int port)
+	public DiscardServer(int port)
 	{
 		this.port = port;
 	}
 
 	public void run() throws Exception
 	{
-		// 接受管道接入
-		EventLoopGroup bossGroup = new NioEventLoopGroup();
-		// 处理管道事件
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		EventLoopGroup bossGroup = new NioEventLoopGroup(); // 用来接收进来的连接
+		EventLoopGroup workerGroup = new NioEventLoopGroup();// 用来处理已经被接收的连接
 		try
 		{
-			ServerBootstrap b = new ServerBootstrap(); // (2)
-			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class) // (3)
+			ServerBootstrap b = new ServerBootstrap(); // 启动NIO服务的辅助启动类
+			b.group(bossGroup, workerGroup).//
+					channel(NioServerSocketChannel.class) // 指定管道的类型
 					.childHandler(new ChannelInitializer<SocketChannel>()
 					{ // (4)
 						@Override
@@ -65,6 +67,6 @@ public class App
 		{
 			port = 8080;
 		}
-		new App(port).run();
+		new DiscardServer(port).run();
 	}
 }
